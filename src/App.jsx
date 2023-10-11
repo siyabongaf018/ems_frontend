@@ -17,8 +17,12 @@ function App() {
       <HeaderComponent /> 
         <Routes>
           <Route path="/" element={<ListEmployeeComponent />}></Route>
+          {/* http://localhost:5173/employee */}
           <Route path="/employee" element={<ListEmployeeComponent />}></Route>
+          {/* http://localhost:5173/addEmployee */}
           <Route path="/addEmployee" element={<EmployeeComponent />}></Route>
+          {/* http://localhost:5173/editEmployee/1 */}
+          <Route path="/editEmployee/:id" element={<EmployeeComponent />}></Route>
 
         </Routes>
       </BrowserRouter>

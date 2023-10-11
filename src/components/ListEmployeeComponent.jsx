@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ListEmployee } from "../services/EmployeeServices";
+import { ListEmployee, deleteEmployee } from "../services/EmployeeServices";
 import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
- 
   const [employee, setEmployee] = useState([]);
   const navigate = useNavigate();
   /* ListEmployee() - this method is defined in employee service file. 
@@ -15,30 +14,51 @@ const ListEmployeeComponent = () => {
   response.data - this has the data from the database
   */
   useEffect(() => {
+    getAllEmployee();
+  }, []);
+
+  function getAllEmployee() {
     ListEmployee()
       .then((response) => {
         setEmployee(response.data);
       })
       .catch((error) => console.error(error));
-  }, []);
-
-  const addNewEmployee =() =>{
-    navigate("/addEmployee");
-
   }
+
+  const addNewEmployee = () => {
+    navigate("/addEmployee");
+  };
+
+  const updateEmployee = (employeeId) => {
+    navigate(`/editEmployee/${employeeId}`);
+  };
+
+  const deleteEmployeebyID = (employeeId) => {
+    console.log(employeeId);
+    deleteEmployee(employeeId)
+      .then((response) => {
+        getAllEmployee();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="container">
       <h2 className="text-center">List of Employee</h2>
       {/* buttong to add new employee mb-2 means margin bottom 2 */}
-      <button className="btn btn-primary mb-2" onClick={addNewEmployee}>Add Employee</button>
+      <button className="btn btn-primary mb-2" onClick={addNewEmployee}>
+        Add Employee
+      </button>
       <table className="table tale-striped table-bordered">
-        <thead>
-          <tr>
+        <thead >
+          <tr >
             <th>Employee id</th>
             <th>Employee Lirst Name</th>
             <th>Employee Last Name</th>
             <th>Employee email</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +68,20 @@ const ListEmployeeComponent = () => {
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.email}</td>
+              <td>
+                <button
+                  className="btn mb-2"
+                  onClick={() => updateEmployee(employee.id)}
+                >
+                  🖊
+                </button>
+                <button
+                  className="btn mb-2"
+                  onClick={() => deleteEmployeebyID(employee.id)}
+                >
+                  ❌
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
