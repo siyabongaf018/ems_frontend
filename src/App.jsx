@@ -6,6 +6,8 @@ import ListEmployeeComponent from "./components/ListEmployeeComponent";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EmployeeComponent from "./components/EmployeeComponent";
 import HeaderComponent from "./components/HeaderComponent";
+import ListDepartmentComponent from "./components/ListDepartmentComponent";
+import DepartmentComponent from "./components/DepartmentComponent";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +25,14 @@ function App() {
           <Route path="/addEmployee" element={<EmployeeComponent />}></Route>
           {/* http://localhost:5173/editEmployee/1 */}
           <Route path="/editEmployee/:id" element={<EmployeeComponent />}></Route>
+
+          {/* http://localhost:5173/department */}
+          <Route path="/department" element={<ListDepartmentComponent />}></Route>
+          {/* http://localhost:5173/addDepartment */}
+          <Route path="/addDepartment" element={<DepartmentComponent />}></Route>
+          {/* http://localhost:5173/editDepartment/1 */}
+          <Route path="/editDepartment/:id" element={<DepartmentComponent />}></Route>
+
 
         </Routes>
       </BrowserRouter>

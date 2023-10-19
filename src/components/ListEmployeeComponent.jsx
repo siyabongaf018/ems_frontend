@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ListEmployee, deleteEmployee } from "../services/EmployeeServices";
 import { useNavigate } from "react-router-dom";
+import { getAllDeparment } from "../services/DepartmentServices";
 
 const ListEmployeeComponent = () => {
   const [employee, setEmployee] = useState([]);
+  // const [departmentData, setDepartmentData] = useState([]);
   const navigate = useNavigate();
   /* ListEmployee() - this method is defined in employee service file. 
   it returns data from the database using axios.
@@ -15,6 +17,7 @@ const ListEmployeeComponent = () => {
   */
   useEffect(() => {
     getAllEmployee();
+    // LoadDepartmentData();
   }, []);
 
   function getAllEmployee() {
@@ -24,6 +27,15 @@ const ListEmployeeComponent = () => {
       })
       .catch((error) => console.error(error));
   }
+
+  //for department 
+  // const LoadDepartmentData = () => {
+  //   getAllDeparment()
+  //     .then((response) => {
+  //       setDepartmentData(response.data);
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
 
   const addNewEmployee = () => {
     navigate("/addEmployee");
@@ -58,16 +70,18 @@ const ListEmployeeComponent = () => {
             <th>Employee Lirst Name</th>
             <th>Employee Last Name</th>
             <th>Employee email</th>
+            {/* <th>Department</th> */}
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {employee.map((employee, index) => (
-            <tr key={index}>
+            <tr key={index}>      
               <td>{employee.id}</td>
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.email}</td>
+              {/* <td>{employee.departmentId}</td> */}
               <td>
                 <button
                   className="btn mb-2"
@@ -86,6 +100,9 @@ const ListEmployeeComponent = () => {
           ))}
         </tbody>
       </table>
+      { employee.length === 0 && <h2>No Employees</h2>
+      }
+     
     </div>
   );
 };
