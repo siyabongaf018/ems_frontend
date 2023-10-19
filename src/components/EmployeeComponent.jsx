@@ -5,24 +5,39 @@ import {
   updateEmployee,
 } from "../services/EmployeeServices";
 import { useNavigate, useParams } from "react-router-dom";
+import { getAllDeparment } from "../services/DepartmentServices";
 
 const EmployeeComponent = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+
+  //adding department in the this component
+  const [departmentId, setDepartmentId] = useState("");
+  const [departments, setDepartments] = useState([]);
+
   const navigate = useNavigate();
   //getting the id form the url
   const { id } = useParams();
 
-  //   const handleFirstName =(e) =>{
-  //     setFirstName(e.target.value);
-  //   }
+  //useEffect to get departments
+  useEffect(() => {
+    getAllDeparment()
+      .then((response) => {
+        setDepartments(response.data);
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   //for errors
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    department: ""
   });
 
   useEffect(() => {
@@ -32,6 +47,7 @@ const EmployeeComponent = () => {
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
           setEmail(response.data.email);
+          setDepartmentId(response.data.departmentId);
         })
         .catch((error) => {
           console.error(error);
@@ -41,10 +57,12 @@ const EmployeeComponent = () => {
 
   const saveEmployee = (e) => {
     e.preventDefault();
+   console.log(departments);
+   console.log(departmentId);
     if (validateForm()) {
-      const employee = { firstName, lastName, email };
+      const employee = { firstName, lastName, email,departmentId };
       console.log(employee);
-      //check if id has value if true then we call the update function from service else we save the data to the database 
+      //check if id has value if true then we call the update function from service else we save the data to the database
       if (id) {
         updateEmployee(employee, id).then((response) => {
           console.log(response.data);
@@ -87,6 +105,13 @@ const EmployeeComponent = () => {
       }
     } else {
       errorCopy.email = "Email is required";
+      valid = false;
+    }
+
+    if (departmentId.trim()) {
+      errorCopy.department = "";
+    } else {
+      errorCopy.department = "Department is required";
       valid = false;
     }
 
@@ -160,7 +185,29 @@ const EmployeeComponent = () => {
                   <div className="invalid-feedback">{errors.email}</div>
                 )}
               </div>
-              ,
+              <div className="form-group mb-2">
+                <label className="form-label">Select Department:</label>
+                <select
+                   className={`form-control ${errors.department ? "is-invalid" : ""}`}
+                  value={departmentId}
+                  onChange={(e) => setDepartmentId(e.target.value)}
+                >
+                  <option value="">Select department</option>
+                  
+                  {departments.map((departmentOptions,index) => (
+                    <option
+                      key={index}
+                      value={departmentOptions.id}
+                    > 
+                      {departmentOptions.departmentName}
+                    </option>
+                  ))}
+                </select>
+                {/* display the error message */}
+                {errors.department && (
+                  <div className="invalid-feedback">{errors.department}</div>
+                )}
+              </div>
               <button className="btn btn-success" onClick={saveEmployee}>
                 Submit
               </button>
